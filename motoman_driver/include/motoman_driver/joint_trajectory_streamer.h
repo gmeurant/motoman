@@ -149,6 +149,10 @@ protected:
 
   static bool VectorToJointData(const std::vector<double> &vec,
                                 industrial::joint_data::JointData &joints);
+                                
+  double time_of_last;
+  double time_since_last;
+  static const double point_streaming_timeout = 3.0;
 
   /**
    * \brief Service used to disable the robot controller.  When disabled,
