@@ -44,15 +44,17 @@ namespace industrial_robot_client
 namespace joint_trajectory_streamer
 {
 
-using industrial_robot_client::joint_trajectory_interface::JointTrajectoryInterface;
 using industrial::simple_message::SimpleMessage;
 using industrial::smpl_msg_connection::SmplMsgConnection;
+using industrial_robot_client::joint_trajectory_interface::JointTrajectoryInterface;
 
 namespace TransferStates
 {
 enum TransferState
 {
-  IDLE = 0, STREAMING = 1, POINT_STREAMING = 2  // ,STARTING, //, STOPPING
+  IDLE = 0,
+  STREAMING = 1,
+  POINT_STREAMING = 2  // ,STARTING, //, STOPPING
 };
 }
 typedef TransferStates::TransferState TransferState;
@@ -92,9 +94,8 @@ public:
    *   - leave empty to lookup from URDF
    * \return true on success, false otherwise (an invalid message type)
    */
-  virtual bool init(SmplMsgConnection* connection, const std::map<int, RobotGroup> &robot_groups,
+  virtual bool init(SmplMsgConnection *connection, const std::map<int, RobotGroup> &robot_groups,
                     const std::map<std::string, double> &velocity_limits = std::map<std::string, double>());
-
 
   /**
    * \brief Class initializer
@@ -108,7 +109,7 @@ public:
    *   - leave empty to lookup from URDF
    * \return true on success, false otherwise (an invalid message type)
    */
-  virtual bool init(SmplMsgConnection* connection, const std::vector<std::string> &joint_names,
+  virtual bool init(SmplMsgConnection *connection, const std::vector<std::string> &joint_names,
                     const std::map<std::string, double> &velocity_limits = std::map<std::string, double>());
 
   ~JointTrajectoryStreamer();
@@ -117,19 +118,23 @@ public:
 
   virtual void jointTrajectoryCB(const motoman_msgs::DynamicJointTrajectoryConstPtr &msg);
 
+  virtual bool trajectory_to_msgs(const motoman_msgs::DynamicJointTrajectoryConstPtr &traj,
+                                  std::vector<SimpleMessage> *msgs);
 
-  virtual bool trajectory_to_msgs(const motoman_msgs::DynamicJointTrajectoryConstPtr& traj,
-                                  std::vector<SimpleMessage>* msgs);
+  virtual bool trajectory_to_msgs(const trajectory_msgs::JointTrajectoryConstPtr &traj,
+                                  std::vector<SimpleMessage> *msgs);
+
+  void jointCommandCB(const trajectory_msgs::JointTrajectoryConstPtr &msg);
 
   virtual void streamingThread();
 
-  bool send_to_robot(const std::vector<SimpleMessage>& messages);
+  bool send_to_robot(const std::vector<SimpleMessage> &messages);
 
 protected:
   static const size_t max_ptstreaming_queue_elements = 20;
   void trajectoryStop();
 
-  boost::thread* streaming_thread_;
+  boost::thread *streaming_thread_;
   boost::mutex mutex_;
   int current_point_;
   std::vector<SimpleMessage> current_traj_;
@@ -137,9 +142,9 @@ protected:
   ros::Time streaming_start_;
   int min_buffer_size_;
 
-  ros::Duration ptstreaming_last_time_from_start_;   // last valid point streaming point time from start
-  int ptstreaming_seq_count_; // sequence count for point streaming (--> JointTrajPtFull::sequence_)
-  std::queue<SimpleMessage> ptstreaming_queue_; // message queue for point streaming
+  ros::Duration ptstreaming_last_time_from_start_;  // last valid point streaming point time from start
+  int ptstreaming_seq_count_;  // sequence count for point streaming (--> JointTrajPtFull::sequence_)
+  std::queue<SimpleMessage> ptstreaming_queue_;     // message queue for point streaming
 };
 
 }  // namespace joint_trajectory_streamer

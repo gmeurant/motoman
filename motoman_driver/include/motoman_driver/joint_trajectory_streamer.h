@@ -33,7 +33,7 @@
 #define MOTOMAN_DRIVER_JOINT_TRAJECTORY_STREAMER_H
 
 #include <mutex>  // NOLINT(build/c++11): Google doesn't approve of mutex
-                  // see https://github.com/google/styleguide/issues/194
+                 // see https://github.com/google/styleguide/issues/194
 #include <map>
 #include <string>
 #include <vector>
@@ -48,10 +48,10 @@ namespace motoman
 namespace joint_trajectory_streamer
 {
 
-using motoman::motion_ctrl::MotomanMotionCtrl;
-using industrial_robot_client::joint_trajectory_streamer::JointTrajectoryStreamer;
 using industrial::simple_message::SimpleMessage;
 using industrial::smpl_msg_connection::SmplMsgConnection;
+using industrial_robot_client::joint_trajectory_streamer::JointTrajectoryStreamer;
+using motoman::motion_ctrl::MotomanMotionCtrl;
 
 /**
  * \brief Message handler that streams joint trajectories to the robot controller.
@@ -69,8 +69,8 @@ class MotomanJointTrajectoryStreamer : public JointTrajectoryStreamer
 public:
   // since this class overrides some base-class methods,
   // these statements help find the base-class versions
-  using JointTrajectoryStreamer::init;
   using JointTrajectoryInterface::is_valid;
+  using JointTrajectoryStreamer::init;
 
   /**
    * \brief Default constructor
@@ -78,7 +78,7 @@ public:
    * \param robot_id robot group # on this controller (for multi-group systems)
    */
   explicit MotomanJointTrajectoryStreamer(int robot_id = -1) : JointTrajectoryStreamer(1),
-    robot_id_(robot_id) {}
+                                                                robot_id_(robot_id) {}
 
   ~MotomanJointTrajectoryStreamer();
 
@@ -94,7 +94,7 @@ public:
    *   - leave empty to lookup from URDF
    * \return true on success, false otherwise (an invalid message type)
    */
-  virtual bool init(SmplMsgConnection* connection, const std::vector<std::string> &joint_names,
+  virtual bool init(SmplMsgConnection *connection, const std::vector<std::string> &joint_names,
                     const std::map<std::string, double> &velocity_limits = std::map<std::string, double>());
 
   /**
@@ -109,7 +109,7 @@ public:
    *   - leave empty to lookup from URDF
    * \return true on success, false otherwise (an invalid message type)
    */
-  virtual bool init(SmplMsgConnection* connection, const std::map<int, RobotGroup> &robot_groups,
+  virtual bool init(SmplMsgConnection *connection, const std::map<int, RobotGroup> &robot_groups,
                     const std::map<std::string, double> &velocity_limits = std::map<std::string, double>());
 
   /**
@@ -121,13 +121,13 @@ public:
    *
    * \return true on success, false otherwise
    */
-  virtual bool create_message(int seq, const trajectory_msgs::JointTrajectoryPoint &pt, SimpleMessage* msg);
+  virtual bool create_message(int seq, const trajectory_msgs::JointTrajectoryPoint &pt, SimpleMessage *msg);
 
-  virtual bool create_message(int seq, const motoman_msgs::DynamicJointsGroup &pt, SimpleMessage* msg);
+  virtual bool create_message(int seq, const motoman_msgs::DynamicJointsGroup &pt, SimpleMessage *msg);
 
-  virtual bool create_message_ex(int seq, const motoman_msgs::DynamicJointPoint &point, SimpleMessage* msg);
+  virtual bool create_message_ex(int seq, const motoman_msgs::DynamicJointPoint &point, SimpleMessage *msg);
 
-  virtual bool send_to_robot(const std::vector<SimpleMessage>& messages);
+  virtual bool send_to_robot(const std::vector<SimpleMessage> &messages);
 
   virtual void streamingThread();
 
@@ -151,9 +151,9 @@ protected:
                                 industrial::joint_data::JointData &joints);
 
   // variables for point streaming
-  double time_ptstreaming_last_point_;  // time at which the last point was received
-  double dt_ptstreaming_points_;        // elapsed time between two received points
-  static const double ptstreaming_timeout_ = 3.0; // seconds
+  double time_ptstreaming_last_point_;                // time at which the last point was received
+  double dt_ptstreaming_points_;                      // elapsed time between two received points
+  static constexpr double ptstreaming_timeout_ = 3.0;  // seconds
 
   /**
    * \brief Service used to disable the robot controller.  When disabled,
@@ -181,7 +181,7 @@ protected:
    *
    */
   bool enableRobotCB(std_srvs::Trigger::Request &req,
-                     std_srvs::Trigger::Response &res);
+                      std_srvs::Trigger::Response &res);
 };
 
 }  // namespace joint_trajectory_streamer

@@ -175,7 +175,7 @@ void JointTrajectoryStreamer::jointCommandCB(const trajectory_msgs::JointTraject
 
   trajectory_msgs::JointTrajectoryPoint rbt_pt;
 
-  //If current state is idle, set to POINT_STREAMING
+  // If current state is idle, set to POINT_STREAMING
   if (TransferStates::IDLE == state)
   {
     // Check to see if the message contains more than one trajectory point, currently the
@@ -310,7 +310,7 @@ void JointTrajectoryStreamer::jointCommandCB(const trajectory_msgs::JointTraject
     this->mutex_.unlock();
   }
 
-  //Else, cannot splice. Cancel current motion.
+  // Else, cannot splice. Cancel current motion.
   else
   {
     if (msg->points.empty())
@@ -477,7 +477,7 @@ void JointTrajectoryStreamer::streamingThread()
         ROS_WARN("Failed sent joint point, will try again");
 
       break;
-      // TODO Consider checking for controller point starvation here. use a
+      // TODO(someone): Consider checking for controller point starvation here. use a
       //      timer to check if the state is popping in and out of
       //      POINT_STREAMING mode, indicating something is trying to send
       //      streaming points, but is doing so too slowly. It may, in fact, not
